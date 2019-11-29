@@ -232,8 +232,16 @@ INSERT INTO Besitzt VALUES('TV','Ritz');
 INSERT INTO Besitzt VALUES('TV','Negresco');
 INSERT INTO Besitzt VALUES('TV','Sky Hotel');
 INSERT INTO Besitzt VALUES('WLAN','Ritz');
+INSERT INTO Besitzt VALUES('Sauna','Armani');
+INSERT INTO Besitzt VALUES('Pool','Armani');
+INSERT INTO Besitzt VALUES('WLAN','Armani');
+
+INSERT INTO Anzahlung VALUES(200,150,to_date('01.02.2018', 'DD.MM.YYYY'),1);
+INSERT INTO Anzahlung VALUES(201,70,to_date('01.07.2018', 'DD.MM.YYYY'),2);
+INSERT INTO Anzahlung VALUES(202,270,to_date('20.01.2018', 'DD.MM.YYYY'),3);
+INSERT INTO Anzahlung VALUES(203,400,to_date('15.02.2018', 'DD.MM.YYYY'),4);
+INSERT INTO Anzahlung VALUES(204,660,to_date('19.03.2018', 'DD.MM.YYYY'),5);
 
 
-alter user dbsys01 identified by anijan;
 
 
