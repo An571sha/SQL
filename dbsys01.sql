@@ -92,7 +92,7 @@ ferienwohnungsName varchar2(30) NOT NULL,
 mailadresse varchar2(30) NOT NULL,
 betrag INTEGER NOT NULL,
 rechnungsnummer INTEGER NOT NULL,
-bewertungsId INTEGER NOT NULL,
+bewertungsId INTEGER,
 rechnungsdatum DATE NOT NULL,
 
 CONSTRAINT pk_Buchung PRIMARY KEY (buchungsNummer),
@@ -157,4 +157,83 @@ CONSTRAINT fk_bild FOREIGN KEY (ferienwohnungName)
            REFERENCES Ferienwohnung(name)
            ON DELETE CASCADE
 );
+
+INSERT INTO Land VALUES ('Deutschland');
+INSERT INTO Land VALUES ('Frankreich');
+INSERT INTO Land VALUES ('Schweiz');
+INSERT INTO Land VALUES ('Spanien');
+INSERT INTO Land VALUES ('Portugal');
+
+INSERT INTO Adresse VALUES (1,78462,'gutstraße','12','Deutschland','Konstanz');
+INSERT INTO Adresse VALUES (2,32000,'rue Sadi Carnot','58','Frankreich','Bordeaux');
+INSERT INTO Adresse VALUES (3,75016,'rue La Boetie','126','Frankreich','Paris');
+INSERT INTO Adresse VALUES (4,75004,'rue Nationale','103','Frankreich','Paris');
+INSERT INTO Adresse VALUES (5,69004,'rue de la République','50','Frankreich','Lyon');
+INSERT INTO Adresse VALUES (6,4190,'Untere Bahnhofstrasse','107','Schweiz','Cama');
+INSERT INTO Adresse VALUES (7,4089,'Breitenstrasse','51','Schweiz','Basel');
+INSERT INTO Adresse VALUES (8,8001,'Strickstrasse','115','Schweiz','Zürich');
+INSERT INTO Adresse VALUES (9,9029,'Via Pestariso','12A','Schweiz','St.Gallen');
+INSERT INTO Adresse VALUES (10,16271,'Landhausstraße','94','Deutschland','Angermünde');
+INSERT INTO Adresse VALUES (11,54675,'Güntzelstrasse','90','Deutschland','Rheinland-Pfalz');
+INSERT INTO Adresse VALUES (12,41450,'Eusebio Dávila','10','Spanien','Constantina');
+INSERT INTO Adresse VALUES (13,39846,'Extramuros','1A','Spanien','Madrid');
+INSERT INTO Adresse VALUES (14,08940,'Comandante','67','Spanien','Barcelona');
+INSERT INTO Adresse VALUES (15,46210,'Picanya','98','Spanien','Valencia');
+INSERT INTO Adresse VALUES (16,384022,'Cortinhas Fonte','57','Portugal','Setubal');
+INSERT INTO Adresse VALUES (17,2890-308,'Familia Marques','98','Portugal','Madeira');
+INSERT INTO Adresse VALUES (18,22210,'Alferes Pestana','68','Portugal','Quebrada');
+INSERT INTO Adresse VALUES (19,34210,'Veiga','1','Portugal','Ilha');
+
+INSERT INTO Ferienwohnung VALUES('Sky Hotel',5,30.00,50.00,1);
+INSERT INTO Ferienwohnung VALUES('Tiara One',10,60.70,70.00,2);
+INSERT INTO Ferienwohnung VALUES('Negresco',12,88.32,90.00,3);
+INSERT INTO Ferienwohnung VALUES('Ritz',20,120.32,200.00,7);
+INSERT INTO Ferienwohnung VALUES('Armani',32,132.22,220.00,9);
+INSERT INTO Ferienwohnung VALUES('ibis',50,82.22,120.00,11);
+INSERT INTO Ferienwohnung VALUES('Santo Domingo',22,68.88,99.60,13);
+INSERT INTO Ferienwohnung VALUES('Zmar',32,79.80,150.00,15);
+
+INSERT INTO Buchung VALUES(1,to_date('01.02.2018', 'DD.MM.YYYY'),to_date('01.09.2018', 'DD.MM.YYYY'),to_date('03.09.2018', 'DD.MM.YYYY'),'Sky Hotel','anim@webdesign.de',150,100,NULL,to_date('01.02.2018', 'DD.MM.YYYY'));
+INSERT INTO Buchung VALUES(2,to_date('05.03.2018', 'DD.MM.YYYY'),to_date('08.09.2018', 'DD.MM.YYYY'),to_date('09.09.2018', 'DD.MM.YYYY'),'Tiara One','anim@webdesign.de',70,101,NULL,to_date('01.07.2018', 'DD.MM.YYYY'));
+INSERT INTO Buchung VALUES(3,to_date('20.01.2018', 'DD.MM.YYYY'),to_date('01.06.2018', 'DD.MM.YYYY'),to_date('04.06.2018', 'DD.MM.YYYY'),'Negresco','jan@webdesign.de',270,102,NULL,to_date('20.01.2018', 'DD.MM.YYYY'));
+INSERT INTO Buchung VALUES(4,to_date('15.02.2018', 'DD.MM.YYYY'),to_date('20.07.2018', 'DD.MM.YYYY'),to_date('22.07.2018', 'DD.MM.YYYY'),'Ritz','jan@webdesign.de',400,103,NULL,to_date('15.02.2018', 'DD.MM.YYYY'));
+INSERT INTO Buchung VALUES(5,to_date('19.03.2018', 'DD.MM.YYYY'),to_date('01.04.2018', 'DD.MM.YYYY'),to_date('03.04.2018', 'DD.MM.YYYY'),'Armani','janko@webdesign.de',660,104,NULL,to_date('19.03.2018', 'DD.MM.YYYY'));
+
+INSERT INTO Kunde VALUES('anim@webdesign.de','012345678','AB222222','Animesh',19);
+INSERT INTO Kunde VALUES('jan@webdesign.de','2121214','CD333333','Jan',18);
+INSERT INTO Kunde VALUES('janko@webdesign.de','3131314','EF44444','Janko',17);
+
+INSERT INTO Touristenattraktion VALUES('Altstadt');
+INSERT INTO Touristenattraktion VALUES('Port');
+INSERT INTO Touristenattraktion VALUES('Eifel Tower');
+INSERT INTO Touristenattraktion VALUES('Old Church');
+
+INSERT INTO EntferntVon VALUES(10,'Altstadt','Sky Hotel');
+INSERT INTO EntferntVon VALUES(13,'Port','Tiara One');
+INSERT INTO EntferntVon VALUES(22,'Eifel Tower','Negresco');
+INSERT INTO EntferntVon VALUES(05,'Old Church','Ritz');
+
+INSERT INTO Ausstattung VALUES('Sauna');
+INSERT INTO Ausstattung VALUES('Pool');
+INSERT INTO Ausstattung VALUES('Minbar');
+INSERT INTO Ausstattung VALUES('TV');
+INSERT INTO Ausstattung VALUES('WLAN');
+
+
+INSERT INTO Besitzt VALUES('Sauna','Negresco');
+INSERT INTO Besitzt VALUES('Sauna','Ritz');
+INSERT INTO Besitzt VALUES('Pool','Sky Hotel');
+INSERT INTO Besitzt VALUES('Pool','Tiara One');
+INSERT INTO Besitzt VALUES('Pool','Ritz');
+INSERT INTO Besitzt VALUES('Minbar','Sky Hotel');
+INSERT INTO Besitzt VALUES('Minbar','Tiara One');
+INSERT INTO Besitzt VALUES('Minbar','Negresco');
+INSERT INTO Besitzt VALUES('TV','Ritz');
+INSERT INTO Besitzt VALUES('TV','Negresco');
+INSERT INTO Besitzt VALUES('TV','Sky Hotel');
+INSERT INTO Besitzt VALUES('WLAN','Ritz');
+
+
+alter user dbsys01 identified by anijan;
+
 
