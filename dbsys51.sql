@@ -46,6 +46,9 @@ CREATE TABLE EntferntVon
 entfernung INTEGER NOT NULL,
 attraktionsName  varchar2(30) NOT NULL,
 ferienwohnungsName varchar2(20) NOT NULL,
+
+CONSTRAINT pk_EntferntVon PRIMARY KEY (attraktionsName,ferienwohnungsName),
+
 CONSTRAINT fk_attraktionsName FOREIGN KEY (attraktionsName)
            REFERENCES Touristenattraktion(attraktionsName)
            ON DELETE CASCADE,
@@ -242,6 +245,31 @@ INSERT INTO Anzahlung VALUES(202,270,to_date('20.01.2018', 'DD.MM.YYYY'),3);
 INSERT INTO Anzahlung VALUES(203,400,to_date('15.02.2018', 'DD.MM.YYYY'),4);
 INSERT INTO Anzahlung VALUES(204,660,to_date('19.03.2018', 'DD.MM.YYYY'),5);
 
+GRANT SELECT ON Land TO dbsys52;
+GRANT SELECT ON Besitzt TO dbsys52;
+GRANT SELECT ON Ausstattung TO dbsys52;
+GRANT SELECT ON EntferntVon TO dbsys52;
+GRANT SELECT ON Touristenattraktion TO dbsys52;
+
+GRANT SELECT ON Kunde TO dbsys52;
+GRANT INSERT ON Kunde TO dbsys52;
+GRANT DELETE ON Kunde TO dbsys52;
+GRANT UPDATE ON Kunde TO dbsys52;
+
+GRANT SELECT ON Buchung TO dbsys52;
+GRANT INSERT ON Buchung TO dbsys52;
+
+GRANT SELECT ON Ferienwohnung TO dbsys52;
+
+GRANT SELECT ON Adresse TO dbsys52;
+GRANT INSERT ON Adresse TO dbsys52;
+GRANT DELETE ON Adresse TO dbsys52;
+
+GRANT SELECT ON Bewertung TO dbsys52;
+GRANT INSERT ON Bewertung TO dbsys52;
+GRANT DELETE ON Bewertung TO dbsys52;
+
+GRANT SELECT ON Bild TO dbsys52;
 
 
 
