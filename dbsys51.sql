@@ -239,6 +239,9 @@ INSERT INTO Besitzt VALUES('WLAN','Ritz');
 INSERT INTO Besitzt VALUES('Sauna','Armani');
 INSERT INTO Besitzt VALUES('Pool','Armani');
 INSERT INTO Besitzt VALUES('WLAN','Armani');
+INSERT INTO Besitzt VALUES('WLAN','Santo Domingo');
+INSERT INTO Besitzt VALUES('Sauna','Santo Domingo');
+INSERT INTO Besitzt VALUES('Pool','Santo Domingo');
 
 INSERT INTO Anzahlung VALUES(200,150,to_date('01.02.2018', 'DD.MM.YYYY'),1);
 INSERT INTO Anzahlung VALUES(201,70,to_date('01.07.2018', 'DD.MM.YYYY'),2);
