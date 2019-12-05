@@ -196,11 +196,12 @@ INSERT INTO Ferienwohnung VALUES('ibis',50,82.22,120.00,11);
 INSERT INTO Ferienwohnung VALUES('Santo Domingo',22,68.88,99.60,13);
 INSERT INTO Ferienwohnung VALUES('Zmar',32,79.80,150.00,15);
 
-INSERT INTO Buchung VALUES(1,to_date('01.02.2018', 'DD.MM.YYYY'),to_date('01.09.2018', 'DD.MM.YYYY'),to_date('03.09.2018', 'DD.MM.YYYY'),'Sky Hotel','anim@webdesign.de',150,100,NULL,to_date('01.02.2018', 'DD.MM.YYYY'));
-INSERT INTO Buchung VALUES(2,to_date('05.03.2018', 'DD.MM.YYYY'),to_date('08.09.2018', 'DD.MM.YYYY'),to_date('09.09.2018', 'DD.MM.YYYY'),'Tiara One','anim@webdesign.de',70,101,NULL,to_date('01.07.2018', 'DD.MM.YYYY'));
-INSERT INTO Buchung VALUES(3,to_date('20.01.2018', 'DD.MM.YYYY'),to_date('01.06.2018', 'DD.MM.YYYY'),to_date('04.06.2018', 'DD.MM.YYYY'),'Negresco','jan@webdesign.de',270,102,NULL,to_date('20.01.2018', 'DD.MM.YYYY'));
-INSERT INTO Buchung VALUES(4,to_date('15.02.2018', 'DD.MM.YYYY'),to_date('20.07.2018', 'DD.MM.YYYY'),to_date('22.07.2018', 'DD.MM.YYYY'),'Ritz','jan@webdesign.de',400,103,NULL,to_date('15.02.2018', 'DD.MM.YYYY'));
-INSERT INTO Buchung VALUES(5,to_date('19.03.2018', 'DD.MM.YYYY'),to_date('01.04.2018', 'DD.MM.YYYY'),to_date('03.04.2018', 'DD.MM.YYYY'),'Armani','janko@webdesign.de',660,104,NULL,to_date('19.03.2018', 'DD.MM.YYYY'));
+INSERT INTO Buchung VALUES(1,to_date('01.02.2018', 'DD.MM.YYYY'),to_date('01.09.2018', 'DD.MM.YYYY'),to_date('03.09.2018', 'DD.MM.YYYY'),'Sky Hotel','anim@webdesign.de',150,100,1,to_date('01.02.2018', 'DD.MM.YYYY'));
+INSERT INTO Buchung VALUES(2,to_date('05.03.2018', 'DD.MM.YYYY'),to_date('08.09.2018', 'DD.MM.YYYY'),to_date('09.09.2018', 'DD.MM.YYYY'),'Tiara One','anim@webdesign.de',70,101,2,to_date('01.07.2018', 'DD.MM.YYYY'));
+INSERT INTO Buchung VALUES(3,to_date('20.01.2018', 'DD.MM.YYYY'),to_date('01.06.2018', 'DD.MM.YYYY'),to_date('04.06.2018', 'DD.MM.YYYY'),'Negresco','jan@webdesign.de',270,102,3,to_date('20.01.2018', 'DD.MM.YYYY'));
+INSERT INTO Buchung VALUES(4,to_date('15.02.2018', 'DD.MM.YYYY'),to_date('20.07.2018', 'DD.MM.YYYY'),to_date('22.07.2018', 'DD.MM.YYYY'),'Ritz','jan@webdesign.de',400,103,4,to_date('15.02.2018', 'DD.MM.YYYY'));
+INSERT INTO Buchung VALUES(5,to_date('19.03.2018', 'DD.MM.YYYY'),to_date('01.04.2018', 'DD.MM.YYYY'),to_date('03.04.2018', 'DD.MM.YYYY'),'Armani','janko@webdesign.de',660,104,5,to_date('19.03.2018', 'DD.MM.YYYY'));
+INSERT INTO Buchung VALUES(6,to_date('20.10.2018', 'DD.MM.YYYY'),to_date('31.12.2019', 'DD.MM.YYYY'),to_date('02.01.2019', 'DD.MM.YYYY'),'Santo Domingo','anim@webdesign.de',199.2,105,6,to_date('20.10.2018', 'DD.MM.YYYY'));
 
 INSERT INTO Kunde VALUES('anim@webdesign.de','012345678','AB222222','Animesh',19);
 INSERT INTO Kunde VALUES('jan@webdesign.de','2121214','CD333333','Jan',18);
@@ -244,6 +245,14 @@ INSERT INTO Anzahlung VALUES(201,70,to_date('01.07.2018', 'DD.MM.YYYY'),2);
 INSERT INTO Anzahlung VALUES(202,270,to_date('20.01.2018', 'DD.MM.YYYY'),3);
 INSERT INTO Anzahlung VALUES(203,400,to_date('15.02.2018', 'DD.MM.YYYY'),4);
 INSERT INTO Anzahlung VALUES(204,660,to_date('19.03.2018', 'DD.MM.YYYY'),5);
+INSERT INTO Anzahlung VALUES(205,199.2,to_date('20.10.2018', 'DD.MM.YYYY'),6);
+
+INSERT INTO Bewertung VALUES(1,4,to_date('03.09.2018'));
+INSERT INTO Bewertung VALUES(2,3,to_date('10.09.2018'));
+INSERT INTO Bewertung VALUES(3,5,to_date('05.06.2018'));
+INSERT INTO Bewertung VALUES(4,4,to_date('24.07.2018'));
+INSERT INTO Bewertung VALUES(5,5,to_date('03.04.2018'));
+INSERT INTO Bewertung VALUES(6,5,to_date('03.01.2019'));
 
 GRANT SELECT ON Land TO dbsys52;
 GRANT SELECT ON Besitzt TO dbsys52;
