@@ -2,7 +2,7 @@ SELECT * FROM dbsys51.Touristenattraktion;
 
 SELECT ferienwohnungsName, mailadresse FROM dbsys51.Buchung;
 
-SELECT straße FROM dbsys51.Adresse WHERE landName = 'Deutschland'; 
+SELECT straï¿½e FROM dbsys51.Adresse WHERE landName = 'Deutschland'; 
 
 SELECT name FROM dbsys51.FerienWohnung WHERE preisProTag < 100;
 
@@ -29,34 +29,42 @@ SELECT name
 FROM DBSYS51.ferienwohnung f
 WHERE f.name NOT IN ( SELECT b.ferienwohnungsname FROM DBSYS51.buchung b );
 
--- Welche Ferienwohnung hat die meisten Ausstattungen? ERROR? WHY? --
-SELECT f.name, MAX(count(b.austattungsname))
-FROM DBSYS51.ferienwohnung f, DBSYS51.besitzt b
+-- Welche Ferienwohnung hat die meisten Ausstattungen? ERROR FIXED WITH VIEW --
+CREATE OR REPLACE VIEW top AS
+SELECT f.name AS ferienwohnungAlias, COUNT(b.AUSTATTUNGSNAME) AS ausstattungenAlias
+FROM dbsys51.besitzt b, dbsys51.Ferienwohnung f 
 WHERE f.name = b.ferienwohnungsname
-GROUP BY f.name, b.austattungsname;
+GROUP BY f.name;
 
--- Wie viele Reservierungen gibt es für die einzelnen Länder? Länder, in denen keine Reservierungen existieren, sollen mit der Anzahl 0 ebenfalls aufgeführt werden. Das Ergebnis soll nach der Anzahl Reservierungen absteigend sortiert werden.--
+SELECT * FROM top
+WHERE ausstattungenAlias = (SELECT MAX(ausstattungenAlias) From top);
 
--- needs correction --
-SELECT a.landname, count( b.ferienwohnungsname)
-FROM DBSYS51.buchung b, DBSYS51.adresse a, DBSYS51.ferienwohnung f
-WHERE b.ferienwohnungsname(+) = f.name AND f.addressId = a.addressId
-GROUP BY a.landname, b.ferienwohnungsname
-ORDER BY count(b.ferienwohnungsname) DESC;
+-- Wie viele Reservierungen gibt es fï¿½r die einzelnen Lï¿½nder? Lï¿½nder, in denen keine Reservierungen existieren, sollen mit der Anzahl 0 ebenfalls aufgefï¿½hrt werden. Das Ergebnis soll nach der Anzahl Reservierungen absteigend sortiert werden.--
 
---Welche Ferienwohnungen mit Sauna sind in Spanien in der Zeit vom 1.11.2019 – 21.11.2019 noch frei?Geben Sie den Ferienwohnungs-Namen und deren durchschnittliche Bewertung an. Ferienwohnungenmit guten Bewertungen sollen zuerst angezeigt werden --
+-- corrections done --
+SELECT a.landname, NVL(COUNT(b.FERIENWOHNUNGSNAME), 0)
+FROM DBSYS51.Buchung b INNER JOIN DBSYS51.Ferienwohnung f ON b.FERIENWOHNUNGSNAME = f.name --mit inner join bekkome ich alle Ferienwohnung die gebucht sind --
+RIGHT OUTER JOIN DBSYS51.Adresse a ON a.addressid = f.addressid
+GROUP BY a.landname
+ORDER BY NVL(COUNT(b.buchungsnummer), 0) DESC;
 
-SELECT f.name
-FROM DBSYS51.ferienwohnung f, DBSYS51.buchung b, DBSYS51.adresse a
+
+--Welche Ferienwohnungen mit Sauna sind in Spanien in der Zeit vom 1.11.2019 ï¿½ 21.11.2019 noch frei?Geben Sie den Ferienwohnungs-Namen und deren durchschnittliche Bewertung an. Ferienwohnungenmit guten Bewertungen sollen zuerst angezeigt werden --
+
+SELECT f.name, AVG(be.sterne)
+FROM DBSYS51.ferienwohnung f, DBSYS51.buchung b, DBSYS51.adresse a, DBSYS51.Bewertung be
 WHERE
     b.ferienwohnungsname = f.name AND
     NOT EXISTS( 
-    SELECT be.ferienwohnungsname
-    FROM DBSYS51.buchung be WHERE be.abreisedatum > to_date('21.11.2019', 'DD.MM.YYYY') 
-    AND be.anreisedatum > to_date('1.11.2019', 'DD.MM.YYYY'))
+                SELECT be.ferienwohnungsname
+                FROM DBSYS51.buchung be WHERE be.abreisedatum > to_date('21.11.2019', 'DD.MM.YYYY') 
+                AND be.anreisedatum > to_date('1.11.2019', 'DD.MM.YYYY'))
     AND f.addressId = a.addressId 
     AND a.landname = 'Spanien'
-    AND b.ferienwohnungsname IN (SELECT bes.ferienwohnungsname FROM DBSYS51.besitzt bes WHERE bes.austattungsname = 'Sauna');
+    AND b.ferienwohnungsname IN (SELECT bes.ferienwohnungsname FROM DBSYS51.besitzt bes WHERE bes.austattungsname = 'Sauna')
+    AND b.BEWERTUNGSID = be.BEWERTUNGSID
+GROUP BY f.name
+ORDER BY AVG(be.sterne) DESC;
    
 
 
