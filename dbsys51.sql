@@ -202,6 +202,8 @@ INSERT INTO Buchung VALUES(3,to_date('20.01.2018', 'DD.MM.YYYY'),to_date('01.06.
 INSERT INTO Buchung VALUES(4,to_date('15.02.2018', 'DD.MM.YYYY'),to_date('20.07.2018', 'DD.MM.YYYY'),to_date('22.07.2018', 'DD.MM.YYYY'),'Ritz','jan@webdesign.de',400,103,4,to_date('15.02.2018', 'DD.MM.YYYY'));
 INSERT INTO Buchung VALUES(5,to_date('19.03.2018', 'DD.MM.YYYY'),to_date('01.04.2018', 'DD.MM.YYYY'),to_date('03.04.2018', 'DD.MM.YYYY'),'Armani','janko@webdesign.de',660,104,5,to_date('19.03.2018', 'DD.MM.YYYY'));
 INSERT INTO Buchung VALUES(6,to_date('20.10.2018', 'DD.MM.YYYY'),to_date('31.12.2019', 'DD.MM.YYYY'),to_date('02.01.2019', 'DD.MM.YYYY'),'Santo Domingo','anim@webdesign.de',199.2,105,6,to_date('20.10.2018', 'DD.MM.YYYY'));
+INSERT INTO Buchung VALUES(7,to_date('01.11.2017', 'DD.MM.YYYY'),to_date('21.11.2019', 'DD.MM.YYYY'),to_date('02.11.2019', 'DD.MM.YYYY'),'Santo Domingo','anim@webdesign.de',199.2,105,6,to_date('01.11.2017', 'DD.MM.YYYY'));
+
 
 INSERT INTO Kunde VALUES('anim@webdesign.de','012345678','AB222222','Animesh',19);
 INSERT INTO Kunde VALUES('jan@webdesign.de','2121214','CD333333','Jan',18);
