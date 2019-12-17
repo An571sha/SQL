@@ -10,10 +10,10 @@ SELECT name FROM dbsys51.FerienWohnung WHERE preisProTag < 100;
 
 --Wie viele Ferienwohnungen sind pro Stadtnamen gespeichert? --
 
-SELECT ort, count (name)
+SELECT a.ort, count (f.name)
 FROM DBSYS51.ferienwohnung f, DBSYS51.adresse a
 Where f.addressId = a.addressId
-GROUP BY ort,name;
+GROUP BY a.ort,f.name;
 
 --Welche Ferienwohnungen in Spanien haben durchschnittlich mehr als 4 Sterne erhalten? --
 
@@ -57,8 +57,9 @@ WHERE
     b.ferienwohnungsname = f.name AND
     NOT EXISTS( 
                 SELECT be.ferienwohnungsname
-                FROM DBSYS51.buchung be WHERE be.abreisedatum > to_date('21.11.2019', 'DD.MM.YYYY') 
-                AND be.anreisedatum > to_date('1.11.2019', 'DD.MM.YYYY'))
+                FROM DBSYS51.buchung be WHERE
+                (be.abreisedatum > to_date('21.11.2016', 'DD.MM.YYYY') AND be.anreisedatum < to_date('1.11.2016', 'DD.MM.YYYY'))
+                OR(be.anreisedatum > to_date('21.11.2016', 'DD.MM.YYYY') AND be.abreisedatum < to_date('1.11.2016', 'DD.MM.YYYY')))
     AND f.addressId = a.addressId 
     AND a.landname = 'Spanien'
     AND b.ferienwohnungsname IN (SELECT bes.ferienwohnungsname FROM DBSYS51.besitzt bes WHERE bes.austattungsname = 'Sauna')
