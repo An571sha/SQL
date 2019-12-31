@@ -68,4 +68,22 @@ GROUP BY f.name
 ORDER BY AVG(be.sterne) DESC;
    
 
+CREATE OR REPLACE TRIGGER deleted
+BEFORE DELETE ON Buchung
+FOR EACH ROW    
+BEGIN 
+    INSERT INTO storniert
+    (   stornodate,
+        buchungsNummer,
+        name,
+        mailadresse,
+        betrag,
+        rechnungsnummer
+    )
+    VALUES
+    (
+        sysdate,                   
+
+    );
+END;    
 

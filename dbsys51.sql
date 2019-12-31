@@ -19,7 +19,7 @@ CREATE TABLE Adresse
 ( 
 addressId INTEGER NOT NULL,
 postleitzahl varchar2(30) NOT NULL, --Int zu varchar2--
-straße varchar2(30) NOT NULL,
+straï¿½e varchar2(30) NOT NULL,
 hausnummer varchar2(3) NOT NULL,
 landName varchar2(20) NOT NULL,
 Ort varchar2(30) NOT NULL,
@@ -32,7 +32,7 @@ CREATE TABLE Ferienwohnung
 ( 
 name varchar2(30) NOT NULL,
 anzahlZimmer INTEGER NOT NULL,
-größe DOUBLE PRECISION NOT NULL,
+grï¿½ï¿½e DOUBLE PRECISION NOT NULL,
 preisProTag DOUBLE PRECISION NOT NULL,
 addressId INTEGER NOT NULL,
 CONSTRAINT pk_Ferienwohnung PRIMARY KEY (name),
@@ -161,24 +161,44 @@ CONSTRAINT fk_bild FOREIGN KEY (ferienwohnungName)
            ON DELETE CASCADE
 );
 
+CREATE TABLE storniert
+(
+
+stornodate DATE NOT NULL,
+buchungsNummer NOT NULL,
+name varchar2(30) NOT NULL,
+mailadresse varchar2(30) NOT NULL,
+betrag INTEGER NOT NULL,
+rechnungsnummer INTEGER NOT NULL,
+
+CONSTRAINT buchungs_nummer FOREIGN KEY (buchungsNummer)
+           REFERENCES Buchung(buchungsNummer),
+           
+CONSTRAINT st_name FOREIGN KEY (name)
+           REFERENCES Ferienwohnung(name),
+           
+CONSTRAINT mail_adresse FOREIGN KEY (mailadresse)
+           REFERENCES Kunde(mailadresse)           
+);           
+
 INSERT INTO Land VALUES ('Deutschland');
 INSERT INTO Land VALUES ('Frankreich');
 INSERT INTO Land VALUES ('Schweiz');
 INSERT INTO Land VALUES ('Spanien');
 INSERT INTO Land VALUES ('Portugal');
 
-INSERT INTO Adresse VALUES (1,78462,'gutstraße','12','Deutschland','Konstanz');
+INSERT INTO Adresse VALUES (1,78462,'gutstraï¿½e','12','Deutschland','Konstanz');
 INSERT INTO Adresse VALUES (2,32000,'rue Sadi Carnot','58','Frankreich','Bordeaux');
 INSERT INTO Adresse VALUES (3,75016,'rue La Boetie','126','Frankreich','Paris');
 INSERT INTO Adresse VALUES (4,75004,'rue Nationale','103','Frankreich','Paris');
-INSERT INTO Adresse VALUES (5,69004,'rue de la République','50','Frankreich','Lyon');
+INSERT INTO Adresse VALUES (5,69004,'rue de la Rï¿½publique','50','Frankreich','Lyon');
 INSERT INTO Adresse VALUES (6,4190,'Untere Bahnhofstrasse','107','Schweiz','Cama');
 INSERT INTO Adresse VALUES (7,4089,'Breitenstrasse','51','Schweiz','Basel');
-INSERT INTO Adresse VALUES (8,8001,'Strickstrasse','115','Schweiz','Zürich');
+INSERT INTO Adresse VALUES (8,8001,'Strickstrasse','115','Schweiz','Zï¿½rich');
 INSERT INTO Adresse VALUES (9,9029,'Via Pestariso','12A','Schweiz','St.Gallen');
-INSERT INTO Adresse VALUES (10,16271,'Landhausstraße','94','Deutschland','Angermünde');
-INSERT INTO Adresse VALUES (11,54675,'Güntzelstrasse','90','Deutschland','Rheinland-Pfalz');
-INSERT INTO Adresse VALUES (12,41450,'Eusebio Dávila','10','Spanien','Constantina');
+INSERT INTO Adresse VALUES (10,16271,'Landhausstraï¿½e','94','Deutschland','Angermï¿½nde');
+INSERT INTO Adresse VALUES (11,54675,'Gï¿½ntzelstrasse','90','Deutschland','Rheinland-Pfalz');
+INSERT INTO Adresse VALUES (12,41450,'Eusebio Dï¿½vila','10','Spanien','Constantina');
 INSERT INTO Adresse VALUES (13,39846,'Extramuros','1A','Spanien','Madrid');
 INSERT INTO Adresse VALUES (14,08940,'Comandante','67','Spanien','Barcelona');
 INSERT INTO Adresse VALUES (15,46210,'Picanya','98','Spanien','Valencia');
@@ -272,6 +292,7 @@ GRANT UPDATE ON Kunde TO dbsys52;
 
 GRANT SELECT ON Buchung TO dbsys52;
 GRANT INSERT ON Buchung TO dbsys52;
+GRANT DELETE ON Buchung TO dbsys52;
 
 GRANT SELECT ON Ferienwohnung TO dbsys52;
 
@@ -284,6 +305,9 @@ GRANT INSERT ON Bewertung TO dbsys52;
 GRANT DELETE ON Bewertung TO dbsys52;
 
 GRANT SELECT ON Bild TO dbsys52;
+
+GRANT SELECT ON storniert TO dbsys52;
+GRANT INSERT ON storniert TO dbsys52;
 
 
 
