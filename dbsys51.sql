@@ -126,6 +126,7 @@ CONSTRAINT anzahlungsIdCheck CHECK (anzahlungsId > 0),
 CONSTRAINT AnzahlungBetragCheck CHECK (betrag >= 0),   
 CONSTRAINT fk_anzahlung FOREIGN KEY (buchungsNummer)
            REFERENCES Buchung(buchungsNummer)
+           ON DELETE CASCADE
 );
 
 CREATE TABLE Ausstattung
@@ -166,19 +167,13 @@ CREATE TABLE storniert
 
 stornodate DATE NOT NULL,
 buchungsNummer NOT NULL,
-name varchar2(30) NOT NULL,
+ferienwohnungsName varchar2(30) NOT NULL,
 mailadresse varchar2(30) NOT NULL,
 betrag INTEGER NOT NULL,
 rechnungsnummer INTEGER NOT NULL,
 
 CONSTRAINT buchungs_nummer FOREIGN KEY (buchungsNummer)
-           REFERENCES Buchung(buchungsNummer),
-           
-CONSTRAINT st_name FOREIGN KEY (name)
-           REFERENCES Ferienwohnung(name),
-           
-CONSTRAINT mail_adresse FOREIGN KEY (mailadresse)
-           REFERENCES Kunde(mailadresse)           
+           REFERENCES Buchung(buchungsNummer)          
 );           
 
 INSERT INTO Land VALUES ('Deutschland');
@@ -293,6 +288,8 @@ GRANT UPDATE ON Kunde TO dbsys52;
 GRANT SELECT ON Buchung TO dbsys52;
 GRANT INSERT ON Buchung TO dbsys52;
 GRANT DELETE ON Buchung TO dbsys52;
+GRANT UPDATE ON Buchung TO dbsys52;
+
 
 GRANT SELECT ON Ferienwohnung TO dbsys52;
 
@@ -308,6 +305,34 @@ GRANT SELECT ON Bild TO dbsys52;
 
 GRANT SELECT ON storniert TO dbsys52;
 GRANT INSERT ON storniert TO dbsys52;
+GRANT UPDATE ON storniert TO dbsys52;
+
+   --create Trigger --   
+
+CREATE OR REPLACE TRIGGER deleted
+BEFORE DELETE ON DBSYS51.Buchung
+FOR EACH ROW    
+BEGIN 
+    INSERT INTO DBSYS51.storniert
+    (   stornodate,
+        buchungsNummer,
+        ferienwohnungsName,
+        mailadresse,
+        betrag,
+        rechnungsnummer
+    )
+    VALUES
+    (
+        sysdate, 
+        :old.buchungsNummer,
+        :old.ferienwohnungsName,
+        :old.mailadresse,
+        :old.betrag,
+        :old.rechnungsnummer
+
+    );
+END;    
+
 
 
 

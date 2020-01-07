@@ -67,23 +67,8 @@ WHERE
 GROUP BY f.name
 ORDER BY AVG(be.sterne) DESC;
    
+DELETE FROM DBSYS51.Buchung
+WHERE buchungsNummer = 1;
 
-CREATE OR REPLACE TRIGGER deleted
-BEFORE DELETE ON Buchung
-FOR EACH ROW    
-BEGIN 
-    INSERT INTO storniert
-    (   stornodate,
-        buchungsNummer,
-        name,
-        mailadresse,
-        betrag,
-        rechnungsnummer
-    )
-    VALUES
-    (
-        sysdate,                   
-
-    );
-END;    
+--create view --
 
