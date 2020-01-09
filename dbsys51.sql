@@ -160,20 +160,27 @@ CONSTRAINT pk_bild PRIMARY KEY (bildID),
 CONSTRAINT fk_bild FOREIGN KEY (ferienwohnungName)
            REFERENCES Ferienwohnung(name)
            ON DELETE CASCADE
+           
 );
 
 CREATE TABLE storniert
 (
 
 stornodate DATE NOT NULL,
-buchungsNummer NOT NULL,
+buchungsNummer NUMBER PRIMARY KEY,
 ferienwohnungsName varchar2(30) NOT NULL,
 mailadresse varchar2(30) NOT NULL,
 betrag INTEGER NOT NULL,
 rechnungsnummer INTEGER NOT NULL,
 
-CONSTRAINT buchungs_nummer FOREIGN KEY (buchungsNummer)
-           REFERENCES Buchung(buchungsNummer)          
+--CONSTRAINT buchungs_nummer FOREIGN KEY (buchungsNummer)
+--           REFERENCES Buchung(buchungsNummer) ON DELETE CASCADE,     
+
+CONSTRAINT st_name FOREIGN KEY (ferienwohnungsName)
+           REFERENCES Ferienwohnung(name) ON DELETE CASCADE,
+           
+CONSTRAINT mail_adresse FOREIGN KEY (mailadresse)
+           REFERENCES Kunde(mailadresse) ON DELETE CASCADE            
 );           
 
 INSERT INTO Land VALUES ('Deutschland');
@@ -307,11 +314,9 @@ GRANT SELECT ON storniert TO dbsys52;
 GRANT INSERT ON storniert TO dbsys52;
 GRANT UPDATE ON storniert TO dbsys52;
 
-   --create Trigger --   
-
 CREATE OR REPLACE TRIGGER deleted
-BEFORE DELETE ON DBSYS51.Buchung
-FOR EACH ROW    
+BEFORE DELETE ON Buchung
+FOR EACH ROW   
 BEGIN 
     INSERT INTO DBSYS51.storniert
     (   stornodate,
@@ -333,6 +338,11 @@ BEGIN
     );
 END;    
 
+/
+DELETE FROM DBSYS51.Buchung
+WHERE buchungsNummer = 1;
 
+rollback;
 
+PURGE RECYCLEBIN;
 

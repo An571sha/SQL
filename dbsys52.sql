@@ -67,8 +67,4 @@ WHERE
 GROUP BY f.name
 ORDER BY AVG(be.sterne) DESC;
    
-DELETE FROM DBSYS51.Buchung
-WHERE buchungsNummer = 1;
-
---create view --
 
