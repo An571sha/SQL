@@ -336,11 +336,33 @@ BEGIN
         :old.rechnungsnummer
 
     );
-END;    
+END;
 
 /
+
+CREATE OR REPLACE VIEW stammKunde AS
+SELECT  k.kundenname AS kundenName, k.mailadresse AS kundennummer, NVL(COUNT(b.buchungsNummer),0)AS anzahlBuchung, NVL(SUM(b.betrag),0)AS betrag
+FROM   buchung b INNER JOIN Kunde k ON k.mailadresse = b.mailadresse
+GROUP BY k.mailadresse, k.kundenname;
+
+SELECT * FROM stammKunde;
+
+CREATE OR REPLACE VIEW storniertStammKunde AS
+SELECT  k.kundenname AS kundenName, k.mailadresse AS kundennummer, NVL(COUNT(s.buchungsNummer),0)AS anzahlBuchung, NVL(SUM(s.betrag),0)AS betrag
+FROM Storniert s INNER JOIN Kunde k ON k.mailadresse = s.mailadresse
+GROUP BY k.mailadresse, k.kundenname;
+
+SELECT * FROM storniertStammKunde;
+
+CREATE OR REPLACE VIEW kundenStatistik AS
+SELECT stammKunde.kundennummer, stammKunde.anzahlBuchung, NVL((storniertStammKunde.anzahlBuchung),0) as Storno, stammkunde.Betrag
+FROM stammkunde LEFT OUTER JOIN storniertStammKunde ON stammkunde.kundennummer = storniertStammKunde.kundennummer;
+
+SELECT * FROM kundenStatistik;
+
+
 DELETE FROM DBSYS51.Buchung
-WHERE buchungsNummer = 1;
+WHERE buchungsNummer = 2;
 
 rollback;
 

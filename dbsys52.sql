@@ -67,4 +67,4 @@ WHERE
 GROUP BY f.name
 ORDER BY AVG(be.sterne) DESC;
    
-
+--Kunden statistik--
