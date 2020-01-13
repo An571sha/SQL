@@ -4,6 +4,10 @@ import java.sql.*;
 public class Dbsys {
 
     public static void main(String[] args) {
+        connectToSqlServer();
+    }
+
+    private static void connectToSqlServer(){
         String name = null;
         String passwd = null;
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
@@ -31,7 +35,7 @@ public class Dbsys {
             conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE); 			// Transaction Isolations-Level setzen
             conn.setAutoCommit(false);													// Kein automatisches Commit
 
-            stmt = conn.createStatement(); 												// Statement-Objekt erzeugen
+/*          stmt = conn.createStatement(); 												// Statement-Objekt erzeugen
 
             String myUpdateQuery = "INSERT INTO pers(pnr, name, jahrg, eindat, gehalt, anr) " +
                     "VALUES('124', 'Huber', 1980, sysdate, 80000, 'K51')";				// Mitarbeiter hinzufügen
@@ -40,6 +44,8 @@ public class Dbsys {
             String mySelectQuery = "SELECT pnr, name, jahrg, TO_CHAR(eindat, 'YYYY') " +
                     "AS eindat, gehalt, beruf, anr, vnr FROM pers";
             rset = stmt.executeQuery(mySelectQuery);									// Query ausführen
+
+
 
             while(rset.next())
                 System.out.println(rset.getInt("pnr") + " "
@@ -51,10 +57,11 @@ public class Dbsys {
                         + rset.getString("anr") + " "
                         + rset.getInt("vnr"));
 
-            myUpdateQuery = "DELETE FROM pers WHERE pnr = '124'";
-            stmt.executeUpdate(myUpdateQuery);											// Mitarbeiter wieder löschen
+               myUpdateQuery = "DELETE FROM pers WHERE pnr = '124'";
+                stmt.executeUpdate(myUpdateQuery);											// Mitarbeiter wieder löschen
+                stmt.close();																// Verbindung trennen
+*/
 
-            stmt.close();																// Verbindung trennen
             conn.commit();
             conn.close();
         } catch (SQLException se) {														// SQL-Fehler abfangen
@@ -75,9 +82,5 @@ public class Dbsys {
             }
             System.exit(-1);
         }
-    }
-
-    public void connectToSqlServer(){
-
     }
 }
