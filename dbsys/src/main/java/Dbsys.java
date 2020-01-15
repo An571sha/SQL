@@ -83,4 +83,20 @@ public class Dbsys {
             System.exit(-1);
         }
     }
+
+    public String queryViewWith(String startDatum, String endDatum){
+        if(!startDatum.isEmpty() && !endDatum.isEmpty()){
+            return "CREATE OR REPLACE VIEW queryWithDates AS SELECT f.name FROM dbsys51.buchung b INNER JOIN dbsys51.ferienwohnung f ON  b.ferienwohnugsname = f.name"
+                    + "WHERE((b.anreiseDatum  <= '" + startDatum + "' AND b.anreiseDatum  >= '" + startDatum + "') OR (b.abreiseDatum  <= '" + endDatum + "' AND b.abreiseDatum  >= '" + endDatum + "') OR (b.anreiseDatum  <= '" + startDatum + "' AND b.anreiseDatum  >= '" + endDatum + "'))";
+        }
+        return "PLEASE ENTER A VALID DATE";
+    }
+
+    public String queryViewWithOrWithout(String austtatung, String land){
+        if(!austtatung.isEmpty() && !land.isEmpty()){  // will probably use left join  on ferienwohnung with besitzt and addresse
+                return "CREATE OR REPLACE VIEW queryViewWithOrWithout AS SELECT f.name FROM dbsys51.ferienwohnung f, dbsys51.Besitzt be, dbsys51.Adresse a ";
+        }
+
+        return "PLEASE SELECT A VALID Country or Features";
+    }
 }
