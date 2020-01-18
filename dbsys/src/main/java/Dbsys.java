@@ -1,7 +1,10 @@
 import java.io.*;
 import java.sql.*;
+import java.util.HashMap;
 
 public class Dbsys {
+    static final String LANDNAME = "landname";
+    static final String MAILADRESSE = "mailadresse";
 
     static String name = null;
     static String passwd = null;
@@ -10,7 +13,7 @@ public class Dbsys {
     static String startDatum = "1.01.2018";
     static String endDatum = "1.02.2019";
     static String ausstattung = "WLAN";
-    static String email = "bon@webdesign.de";
+    static String email = "";
 
     static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
@@ -19,17 +22,23 @@ public class Dbsys {
     static ResultSet rset = null;
 
     static String adr_id;
-    static String strasse = "rokgutstr";
-    static String plz = "233232";
-    static String hausnummer = "51";
-    static String ort = "Pongyang";
+    static String strasse = "";
+    static String plz = "";
+    static String hausnummer = "";
+    static String ort = "";
     static String strassenr;
-    static String landname = "Korea";
+    static String landname = "";
 
-    static String newsletter = "no";
-    static String passwort = "1234567";
-    static String kundname = "Bonasai";
-    static String iban = "DC1221212221";
+    static String newsletter = "";
+    static String passwort = "";
+    static String kundname = "";
+    static String iban = "";
+    static String ferienwohnungsName = "";
+    static String anDatum = "";
+    static String abDatum = "";
+    static String preis = "";
+
+    static HashMap<String,Float> hashMapWithNameUndPreis =  new HashMap<String,Float>();
 
 
     public static void main(String[] args) {
@@ -57,26 +66,88 @@ public class Dbsys {
             conn.setAutoCommit(false);                                                    // Kein automatisches Commit
             stmt = conn.createStatement();
 
-//            System.out.println(queryForFerienWohnung(startDatum, endDatum, ausstattung, land));
+//          System.out.println(queryForFerienWohnung(startDatum, endDatum, ausstattung, land));
 //          System.out.println(testQuery());
             rset = stmt.executeQuery(queryForFerienWohnung(startDatum, endDatum, ausstattung, land));
 //          rset = stmt.executeQuery(testQuery());
             System.out.println(rset.toString());
 
-            System.out.println("please enter email addresse");
-  //          email = in.readLine();
+            System.out.println("please enter email addresse-");
+            email = in.readLine();
+
             while (rset.next()) {
 
-                System.out.println(rset.getString("landname"));
+                System.out.println(rset.getString(LANDNAME));
             }
 
             if(istEineNeueKunde(email,stmt)){
 
-                System.out.println("We could not find you please enter credentials");
-                registerNeueKunde(newsletter,passwort,kundname,iban,strasse,plz,ort,hausnummer,landname);
+                System.out.println("Newsletter-");
+                newsletter = in.readLine();
+
+                System.out.println("passwort-");
+                passwort = in.readLine();
+
+                System.out.println("Name-");
+                kundname = in.readLine();
+
+                System.out.println("iban-");
+                iban = in.readLine();
+
+                System.out.println("Strasse-");
+                strasse = in.readLine();
+
+                System.out.println("plz");
+                plz = in.readLine();
+
+                System.out.println("ort/city name-");
+                ort = in.readLine();
+
+                System.out.println("landname-");
+                landname = in.readLine();
+
+                System.out.println("hausnummer-");
+                hausnummer = in.readLine();
+
+                strassenr = strasse + hausnummer + plz;
+
+                adr_id = String.valueOf(Math.abs(strassenr.hashCode()));
+
+                System.out.println("We could not find you in our database please enter credentials - ");
+
+                registerNeueKunde(newsletter,passwort,kundname,iban,strasse,plz,ort,hausnummer,landname,stmt);
 
             }
 
+            System.out.println("Welcome Back \n");
+            showAlleFerienWohnungsName(stmt);
+            System.out.println(" Please enter a Ferienwohnungsname - \n");
+
+            ferienwohnungsName = in.readLine();
+
+            if(hashMapWithNameUndPreis.containsKey(ferienwohnungsName)){
+
+
+                System.out.println(" Please enter arrival date in  format dd.mm.yyyy - \n");
+                anDatum = in.readLine();
+
+                System.out.println(" Please enter departure date in  format dd.mm.yyyy - \n");
+                abDatum = in.readLine();
+
+                long dates = DateUtils.compareDates(anDatum,abDatum);
+                float preisProTag = hashMapWithNameUndPreis.get(ferienwohnungsName);
+                float summe = (dates * preisProTag);
+
+                preis = String.valueOf(summe);
+
+                System.out.println("total preis " + preis);
+
+
+            } else {
+
+                System.out.println(" Please enter a Ferienwohnungsname from the list - \n");
+
+            }
 
             conn.commit();
             conn.close();
@@ -98,7 +169,7 @@ public class Dbsys {
             }
             System.exit(-1);
 
-        } catch (IOException e){
+        } catch (IOException | InterruptedException e){
             e.printStackTrace();
         }
     }
@@ -120,6 +191,93 @@ public class Dbsys {
     }
 */
 
+
+
+    private static boolean istEineNeueKunde(String email, Statement statement) throws SQLException {
+
+        ResultSet resultSet;
+        resultSet = statement.executeQuery("SELECT mailadresse FROM dbsys51.Kunde ");
+
+        while (resultSet.next()) {
+            if (email.equals(resultSet.getString(MAILADRESSE))) {
+
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static boolean isteinNeuesLand(String name, Statement statement) {
+        ResultSet resultSet;
+        try {
+            resultSet = statement.executeQuery("SELECT name FROM dbsys51.Land ");
+
+            while (resultSet.next()) {
+
+                if (landname.equals(resultSet.getString("name"))){
+                    System.out.println("land name was found in Databank");
+                    return false;
+                }
+
+            }
+
+        } catch (SQLException e) {
+         //   System.out.println("i refuse to run because i am an idiot");
+            e.printStackTrace();
+        }
+
+        return true;
+    }
+
+    private static void registerNeueKunde(String newsletter, String passwort, String kundname, String iban, String strasse, String plz, String ort, String hausnummer, String landname,Statement statement) throws IOException, SQLException, InterruptedException {
+        /*
+             if(isteinNeuesLand(landname,statement)){
+            statement.executeQuery(insertIntoLand(landname));
+        }
+
+        */
+        statement.executeQuery(insertIntoAdresse(adr_id,strasse,landname,plz,hausnummer,ort));
+        Thread.sleep(2000);
+        statement.executeQuery(insertIntoKunde(email,passwort,iban,kundname,adr_id));
+
+        ResultSet rset = null;
+    }
+
+    private static void showAlleFerienWohnungsName(Statement statement) throws SQLException{
+        ResultSet resultSet;
+        resultSet = statement.executeQuery("SELECT name, preisprotag FROM dbsys51.Ferienwohnung ");
+
+        while (resultSet.next()) {
+            System.out.println( " Name - " + resultSet.getString("name") + "-----" +
+                                    "Preis pro tag - "+resultSet.getFloat("preisprotag") + " ");
+            hashMapWithNameUndPreis.put(resultSet.getString("name"),resultSet.getFloat("preisprotag"));
+        }
+
+        System.out.println("\n");
+    }
+
+    private static String insertIntoAdresse(String adr_id ,String strasse, String landname, String plz, String hausnummer, String ort){
+        return "INSERT INTO Dbsys51.Adresse VALUES( " + adr_id + " ,'" + plz + "','" + strasse + "', '" + hausnummer + "', '" + landname + "','" + ort + "')";
+    }
+
+    private static String insertIntoLand(String land){
+        return "INSERT INTO Dbsys51.Adresse VALUES('" + land + "')";
+    }
+
+    private static String insertIntoKunde (String email, String passwort, String iban, String kundname, String adr_id){
+        return "INSERT INTO Dbsys51.Kunde VALUES('" + email + "', '" + passwort + "', '" + iban + "', '" + kundname + "','" + adr_id + "')";
+    }
+
+    private static String testQuery() {
+
+        return "SELECT a.landname, NVL(COUNT(b.FERIENWOHNUNGSNAME), 0)\n" +
+                "FROM DBSYS51.Buchung b INNER JOIN DBSYS51.Ferienwohnung f ON b.FERIENWOHNUNGSNAME = f.name \n" +
+                "RIGHT OUTER JOIN DBSYS51.Adresse a ON a.addressid = f.addressid\n" +
+                "GROUP BY a.landname\n" +
+                "ORDER BY NVL(COUNT(b.buchungsnummer), 0) DESC";
+
+    }
+
     private static String queryForFerienWohnung(String startDatum, String endDatum, String austtatung, String land) {
 
         if (!startDatum.isEmpty() && !endDatum.isEmpty() && !austtatung.isEmpty() && !land.isEmpty()) {
@@ -133,72 +291,5 @@ public class Dbsys {
         }
 
         return "LOL";
-    }
-
-    private static String testQuery() {
-
-        return "SELECT a.landname, NVL(COUNT(b.FERIENWOHNUNGSNAME), 0)\n" +
-                "FROM DBSYS51.Buchung b INNER JOIN DBSYS51.Ferienwohnung f ON b.FERIENWOHNUNGSNAME = f.name \n" +
-                "RIGHT OUTER JOIN DBSYS51.Adresse a ON a.addressid = f.addressid\n" +
-                "GROUP BY a.landname\n" +
-                "ORDER BY NVL(COUNT(b.buchungsnummer), 0) DESC";
-
-    }
-
-    private static boolean istEineNeueKunde(String email, Statement statement) throws SQLException {
-
-        ResultSet resultSet;
-        resultSet = statement.executeQuery("SELECT mailadresse FROM dbsys51.Kunde ");
-
-        while (resultSet.next()) {
-            if (email.equals(resultSet.getString("mailadresse"))) {
-
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private static void registerNeueKunde(String newsletter, String passwort, String kundname, String iban, String strasse, String plz, String ort, String hausnummer, String landname) throws IOException, SQLException {
-        System.out.println("Newsletter??????");
-   //     newsletter = in.readLine();
-
-        System.out.println("passwort-");
-   //     passwort = in.readLine();
-
-        System.out.println("Name-");
-   //     kundname = in.readLine();
-
-        System.out.println("iban-");
-   //     iban = in.readLine();
-
-        System.out.println("Strasse-");
-   //     strasse = in.readLine();
-
-        System.out.println("plz");
-   //     plz = in.readLine();
-
-        System.out.println("ort/city name-");
-   //     ort = in.readLine();
-
-        System.out.println("landname-");
-   //     landname = in.readLine();
-
-        System.out.println("hausnummer-");
-   //     hausnummer = in.readLine();
-
-        strassenr = strasse + hausnummer + plz;
-
-        adr_id = String.valueOf(strassenr.hashCode());
-
-        ResultSet rset = null;
-
-        //do something with newsletter
-
-        stmt.executeQuery("INSERT INTO Dbsys51.Adresse(addressid,postleitzahl,straße,hausnummer,landname,ort) VALUES(" + 56 + ", " + 9898 + "," + strasse + "," + 21 + "," + landname + "," + ort + ")");
-     //   stmt.executeQuery("INSERT INTO dbsys51.Kunde VALUES(" + email + "," + passwort + "," + iban + "," + kundname + ","+ adr_id + ")");
-
-
-
     }
 }
