@@ -9,10 +9,10 @@ public class Dbsys {
     static String name = null;
     static String passwd = null;
 
-    static String land = "Schweiz";
-    static String startDatum = "1.01.2018";
-    static String endDatum = "1.02.2019";
-    static String ausstattung = "WLAN";
+    static String land = "Spanien";
+    static String startDatum = "01.11.2016";
+    static String endDatum = "21.11.2016";
+    static String ausstattung = "Sauna";
     static String email = "";
 
     static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
@@ -22,6 +22,7 @@ public class Dbsys {
     static ResultSet rset = null;
 
     static String adr_id;
+    static String buchung_id;
     static String strasse = "";
     static String plz = "";
     static String hausnummer = "";
@@ -66,21 +67,26 @@ public class Dbsys {
             conn.setAutoCommit(false);                                                    // Kein automatisches Commit
             stmt = conn.createStatement();
 
-//          System.out.println(queryForFerienWohnung(startDatum, endDatum, ausstattung, land));
-//          System.out.println(testQuery());
-            rset = stmt.executeQuery(queryForFerienWohnung(startDatum, endDatum, ausstattung, land));
-//          rset = stmt.executeQuery(testQuery());
-            System.out.println(rset.toString());
+           rset = stmt.executeQuery(queryForFerienWohnung(startDatum, endDatum, ausstattung, land));
+//         rset = stmt.executeQuery(testQuery());
+           System.out.println(rset.toString());
+
+
+
+            while (rset.next()) {
+
+                System.out.println(rset.getString("name") + "----" + rset.getString("AVG(be.sterne)"));
+                System.out.println();
+            }
+
 
             System.out.println("please enter email addresse-");
             email = in.readLine();
 
-            while (rset.next()) {
-
-                System.out.println(rset.getString(LANDNAME));
-            }
-
             if(istEineNeueKunde(email,stmt)){
+
+                System.out.println("We could not find you in our database please enter credentials - ");
+
 
                 System.out.println("Newsletter-");
                 newsletter = in.readLine();
@@ -113,8 +119,6 @@ public class Dbsys {
 
                 adr_id = String.valueOf(Math.abs(strassenr.hashCode()));
 
-                System.out.println("We could not find you in our database please enter credentials - ");
-
                 registerNeueKunde(newsletter,passwort,kundname,iban,strasse,plz,ort,hausnummer,landname,stmt);
 
             }
@@ -138,16 +142,32 @@ public class Dbsys {
                 float preisProTag = hashMapWithNameUndPreis.get(ferienwohnungsName);
                 float summe = (dates * preisProTag);
 
-                preis = String.valueOf(summe);
+                preis = String.valueOf((int)summe);
 
                 System.out.println("total preis " + preis);
 
+                int time = Long.hashCode(System.currentTimeMillis());
+
+                if (time < 0) {
+                    time = time * -1;
+                    time = (time / 10000);
+                } else {
+                    time = time / 10000;
+                }
+
+                buchung_id = String.valueOf(time);
+                System.out.println(buchung_id);
+
+                stmt.executeQuery(insertIntoBuchung(buchung_id,anDatum,abDatum,ferienwohnungsName,email,preis));
+
+                System.out.println(" Booking successful - \n");
 
             } else {
 
                 System.out.println(" Please enter a Ferienwohnungsname from the list - \n");
 
             }
+
 
             conn.commit();
             conn.close();
@@ -169,28 +189,10 @@ public class Dbsys {
             }
             System.exit(-1);
 
-        } catch (IOException | InterruptedException e){
+        } catch (Exception e){
             e.printStackTrace();
         }
     }
-
-/*    public String queryViewWith(String startDatum, String endDatum){
-        if(!startDatum.isEmpty() && !endDatum.isEmpty()){
-            return "CREATE OR REPLACE VIEW queryWithDates AS SELECT f.name FROM dbsys51.buchung b INNER JOIN dbsys51.ferienwohnung f ON  b.ferienwohnugsname = f.name"
-                    + "WHERE((b.anreiseDatum  <= '" + startDatum + "' AND b.anreiseDatum  >= '" + startDatum + "') OR (b.abreiseDatum  <= '" + endDatum + "' AND b.abreiseDatum  >= '" + endDatum + "') OR (b.anreiseDatum  <= '" + startDatum + "' AND b.anreiseDatum  >= '" + endDatum + "'))";
-        }
-        return "PLEASE ENTER A VALID DATE";
-    }
-
-    public String queryViewWithOrWithout(String austtatung, String land){
-        if(!austtatung.isEmpty() && !land.isEmpty()){  // will probably use left join  on ferienwohnung with besitzt and addresse
-                return "CREATE OR REPLACE VIEW queryViewWithOrWithout AS SELECT f.name FROM dbsys51.ferienwohnung f, dbsys51.Besitzt be, dbsys51.Adresse a ";
-        }
-
-        return "PLEASE SELECT A VALID Country or Features";
-    }
-*/
-
 
 
     private static boolean istEineNeueKunde(String email, Statement statement) throws SQLException {
@@ -210,11 +212,11 @@ public class Dbsys {
     private static boolean isteinNeuesLand(String name, Statement statement) {
         ResultSet resultSet;
         try {
-            resultSet = statement.executeQuery("SELECT name FROM dbsys51.Land ");
+            resultSet = statement.executeQuery("SELECT * FROM dbsys51.Land ");
 
             while (resultSet.next()) {
 
-                if (landname.equals(resultSet.getString("name"))){
+                if (name.equals(resultSet.getString("name"))){
                     System.out.println("land name was found in Databank");
                     return false;
                 }
@@ -222,7 +224,6 @@ public class Dbsys {
             }
 
         } catch (SQLException e) {
-         //   System.out.println("i refuse to run because i am an idiot");
             e.printStackTrace();
         }
 
@@ -230,12 +231,12 @@ public class Dbsys {
     }
 
     private static void registerNeueKunde(String newsletter, String passwort, String kundname, String iban, String strasse, String plz, String ort, String hausnummer, String landname,Statement statement) throws IOException, SQLException, InterruptedException {
-        /*
-             if(isteinNeuesLand(landname,statement)){
+
+/*
+        if(isteinNeuesLand(landname,statement)){
             statement.executeQuery(insertIntoLand(landname));
         }
-
-        */
+*/
         statement.executeQuery(insertIntoAdresse(adr_id,strasse,landname,plz,hausnummer,ort));
         Thread.sleep(2000);
         statement.executeQuery(insertIntoKunde(email,passwort,iban,kundname,adr_id));
@@ -268,6 +269,10 @@ public class Dbsys {
         return "INSERT INTO Dbsys51.Kunde VALUES('" + email + "', '" + passwort + "', '" + iban + "', '" + kundname + "','" + adr_id + "')";
     }
 
+    private static String insertIntoBuchung(String time, String anDatum, String abDatum, String ferienwohnungsName, String email, String betrag){
+        return "INSERT INTO Dbsys51.Buchung VALUES (" + time + ",to_date(sysdate, 'DD.MM.YYYY'),to_date('" + abDatum + "', 'DD.MM.YYYY'),to_date('" + anDatum + "', 'DD.MM.YYYY'),'" + ferienwohnungsName + "','" + email + "' ,'" + betrag + "', " + time + ", '', to_date(sysdate, 'DD.MM.YYYY'))";
+    }
+
     private static String testQuery() {
 
         return "SELECT a.landname, NVL(COUNT(b.FERIENWOHNUNGSNAME), 0)\n" +
@@ -282,12 +287,21 @@ public class Dbsys {
 
         if (!startDatum.isEmpty() && !endDatum.isEmpty() && !austtatung.isEmpty() && !land.isEmpty()) {
 
-            // return "SELECT f.name, AVG(be.sterne) FROM DBSYS51.ferienwohnung f, DBSYS51.buchung b, DBSYS51.adresse a, DBSYS51.Bewertung be WHERE b.ferienwohnungsname = f.name AND NOT EXISTS( SELECT be.ferienwohnungsname FROM DBSYS51.buchung be WHERE (be.abreisedatum > ' " + endDatum + " '  AND be.anreisedatum < ' " + startDatum + " ')\n" +
-            //         " OR(be.anreisedatum > '" + endDatum + "' AND be.abreisedatum < '" + startDatum + "')) AND f.addressId = a.addressId AND a.landname = ' " + land + " ' AND b.ferienwohnungsname IN (SELECT bes.ferienwohnungsname FROM DBSYS51.besitzt bes WHERE bes.austattungsname = ' " + austtatung +" ')AND b.BEWERTUNGSID = be.BEWERTUNGSID GROUP BY f.name ORDER BY AVG(be.sterne) DESC";
-
-            return "SELECT f.name, AVG(be.sterne) FROM DBSYS51.ferienwohnung f, DBSYS51.buchung b, DBSYS51.adresse a, DBSYS51.Bewertung be WHERE b.ferienwohnungsname = f.name AND NOT EXISTS( SELECT be.ferienwohnungsname FROM DBSYS51.buchung be WHERE ((b.anreiseDatum  <= '" + startDatum + "' AND b.anreiseDatum  >= '" + startDatum + "') OR (b.abreiseDatum  <= '" + endDatum + "' AND b.abreiseDatum  >= '" + endDatum + "') OR (b.anreiseDatum  <= '" + startDatum + "' AND b.anreiseDatum  >= '" + endDatum + "'))) AND f.addressId = a.addressId AND a.landname = ' " + land + " ' AND b.ferienwohnungsname IN (SELECT bes.ferienwohnungsname FROM DBSYS51.besitzt bes WHERE bes.austattungsname = ' " + austtatung + " ')AND b.BEWERTUNGSID = be.BEWERTUNGSID GROUP BY f.name ORDER BY AVG(be.sterne) DESC";
-
-
+           return "SELECT f.name, AVG(be.sterne)\n" +
+                    "FROM DBSYS51.ferienwohnung f, DBSYS51.buchung b, DBSYS51.adresse a, DBSYS51.Bewertung be\n" +
+                    "WHERE\n" +
+                    "    b.ferienwohnungsname = f.name AND\n" +
+                    "    NOT EXISTS( \n" +
+                    "                SELECT be.ferienwohnungsname\n" +
+                    "                FROM DBSYS51.buchung be WHERE\n" +
+                    "                (be.abreisedatum > to_date('"+endDatum+"', 'DD.MM.YYYY') AND be.anreisedatum < to_date('"+startDatum+"', 'DD.MM.YYYY'))\n" +
+                    "                OR(be.anreisedatum > to_date('"+endDatum+"', 'DD.MM.YYYY') AND be.abreisedatum < to_date('"+startDatum+"', 'DD.MM.YYYY')))\n" +
+                    "    AND f.addressId = a.addressId \n" +
+                    "    AND a.landname = '"+land+"'\n" +
+                    "    AND b.ferienwohnungsname IN (SELECT bes.ferienwohnungsname FROM DBSYS51.besitzt bes WHERE bes.austattungsname = '"+austtatung+"')\n" +
+                    "    AND b.BEWERTUNGSID = be.BEWERTUNGSID\n" +
+                    "GROUP BY f.name\n" +
+                    "ORDER BY AVG(be.sterne) DESC";
         }
 
         return "LOL";
